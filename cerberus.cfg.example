@@ -1,0 +1,136 @@
+
+[DEFAULTS]
+config_version = 1.0
+
+### vCenter Section ###
+[vcenter]
+host = vsphere-01.production.local
+port = 443
+user = vspheremanager
+pwd = v5pher3man@g12
+ssl = false
+datacenter = DC-PRODUCTION
+log = /var/log/cerberus.log
+log_format = {timestamp} - [{action}] {user}@{datacenter} - {vm_name} - {address}
+zfill = false
+
+[vcenter.environments]
+available =
+    prod
+
+[vcenter.networks.prod-app-net]
+name = vxw-dvs-150-virtualwire-21-sid-100004-DC-PRODUCTION-APP-01
+dhcp = false
+cidr = 172.18.0.0/16
+domain = production.local
+dns =
+    172.18.0.11
+    172.18.0.12
+    1.1.1.1
+
+[vcenter.networks.prod-db-net]
+name = vxw-dvs-150-virtualwire-21-sid-100004-DC-PRODUCTION-DB-01
+dhcp = false
+cidr = 172.18.64.0/18
+domain = production.local
+dns =
+    172.18.0.11
+    172.18.0.12
+    1.1.1.1
+
+### vCenter ENVIRONMENT Section ###
+
+[vcenter.environments.prod]
+type = environment
+name = PROD_GDN
+prefix = PROD_GDN
+name_format = {prefix}-{service}-{category}
+hostname_format = gdn-{service}-{category}
+network = prod-server-net
+folder = PRODUCTION
+compute = ClusterComputeResource/ProductionPool/Server
+datastore_cluster = DC-SDRS-RESOURCE-01
+template = centos7
+template_path = Templates
+
+# Default
+[vcenter.categories.prod.default]
+type = category
+name = DEFAULT
+
+# Application
+[vcenter.categories.prod.app]
+inherit = vcenter.categories.prod.default
+type = category
+name = APP
+template = centos7
+
+# Global
+[vcenter.categories.prod.global]
+inherit = vcenter.categories.prod.default
+type = category
+name = APP
+template = centos7
+name_format = {prefix}-{service}
+hostname_format = {service}
+
+# Database
+[vcenter.categories.prod.db]
+inherit = vcenter.categories.prod.default
+type = category
+name = DB
+network = prod-db-net
+compute = ClusterComputeResource/ProductionPool/Database
+datastore_cluster = DC-SDRS-RESOURCE-02
+
+# PostgreSQL
+[vcenter.categories.prod.postgres]
+inherit = vcenter.categories.prod.db
+type = category
+name = PG
+template = postgres-template
+
+
+# Mongo
+[vcenter.categories.prod.mongoarb]
+inherit = vcenter.categories.prod.db
+type = category
+name = MONGOARB
+template = centos7
+
+### Knife Section ###
+[knife]
+ssh_user = chef
+ssh_pwd = chefsecretpassword
+ssh_port = 22
+databag_secret_path = /var/chef/databag_secret
+
+# Knife Environments Section
+[knife.environments.prod]
+name = prod
+chef_environment = gdn-prod
+runlist =
+    role[gdn_linux_system]
+
+### IPAM Section ###
+[phpipam]
+app_id = myapp
+endpoint = http://phpipam.production.local
+user = superadmin
+pwd = 5uper@dmiN
+
+
+### DNS BIND9 Section ###
+[dns]
+rtype = A
+ttl = 300
+
+[dns.zones]
+available =
+    production.local
+
+[dns.zones.production.local]
+name = production.local
+server = 172.18.0.11
+keyring_name = rndc-key
+keyring_value = BEcNd5e4AqRVn2uwVm3CHL==

@@ -1,0 +1,11 @@
+
+*.env
+env*
+__pycache__
+*.pyc
+*.db
+*.sqlite
+*.log
+*.vscode
+celerybeat*
+output

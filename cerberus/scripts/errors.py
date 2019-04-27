@@ -1,0 +1,3 @@
+# 
+class CerberusError(Exception):
+    pass
