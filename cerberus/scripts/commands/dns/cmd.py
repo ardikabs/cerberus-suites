@@ -2,7 +2,7 @@
 import os
 import json
 import click
-from click_alias import ClickAliasedGroup
+from click_aliases import ClickAliasedGroup
 
 from cerberus.scripts.config import ConfigFileProcessor
 from cerberus.scripts.utils import (

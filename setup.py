@@ -18,7 +18,7 @@ setup(
     install_requires=[
         'click', 
         'click-configfile', 
-        'click-alias',
+        'click-aliases',
         'pyvmomi', 
         'dnspython', 
         'requests'
