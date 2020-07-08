@@ -2,7 +2,7 @@
 
 import time
 import click
-from click_alias import ClickAliasedGroup
+from click_aliases import ClickAliasedGroup
 
 from cerberus.scripts.utils import (
     prompt_y_n_question,

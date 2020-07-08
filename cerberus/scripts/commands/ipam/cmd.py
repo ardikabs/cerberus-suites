@@ -1,6 +1,6 @@
 
 import click
-from click_alias import ClickAliasedGroup
+from click_aliases import ClickAliasedGroup
 
 from cerberus.phpipam import errors as phpipam_err
 from cerberus.scripts.config import ConfigFileProcessor
